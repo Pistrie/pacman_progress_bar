@@ -45,7 +45,7 @@ The package can be installed by adding ~pacman_progress_bar~ to your list of dep
 #+begin_src elixir
 def deps do
   [
-    {:pacman_progress_bar, "~> 0.0.0"}
+    {:pacman_progress_bar, "> 0.0.0"}
   ]
 end
 #+end_src
