@@ -5,13 +5,23 @@ defmodule PacmanProgressBar do
   @bar_size 29
   # to make a nice bar the length has to be equal to (2 + (n * 3))
   # change n to get the new length value
+  # TODO create length based on width of terminal
 
   def render do
-    "#{initial_bar()} #{percentage_completed(30, 0)}%"
+    # "#{initial_bar()} #{percentage_completed(30, 1) |> format_percentage()}"
+    "#{initial_bar() |> add_borders_to_bar()} #{percentage_completed(30, 1) |> format_percentage()}"
   end
 
   defp add_borders_to_bar(bar) do
     "[#{bar}]"
+  end
+
+  defp format_percentage(percentage) do
+    cond do
+      percentage < 10 -> "  #{percentage}%"
+      percentage < 100 -> " #{percentage}%"
+      percentage == 100 -> "#{percentage}%"
+    end
   end
 
   defp percentage_completed(total_tasks, completed_tasks) do
