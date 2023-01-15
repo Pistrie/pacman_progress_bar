@@ -18,8 +18,6 @@ defmodule PacmanProgressBar do
 
   Use PacmanProgressBar.raw/2 to get the progress bar in the form of a string
 
-  Returns `:ok`
-
   ## Examples
 
       iex> PacmanProgressBar.render(30, 7)
