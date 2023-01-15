@@ -11,23 +11,32 @@ I got my inspiration from [[https://dennisbeatty.com/cool-clis-in-elixir-with-io
 
 ** Usage
 
-You can render the progress bar using PacmanProgressBar.render/2. You specify the total amount of tasks being executed and the amount of tasks completed.
+You can render the progress bar using PacmanProgressBar.render/2. You specify the total amount of tasks being executed and the amount of tasks completed. This uses IO.write/2 to print the bar, and the bar is preceded by a carriage return character to replace the previous bar like so: IO.write("\r[---C-o..."
 
 #+begin_src elixir
 PacmanProgressBar.render(30, 7)
+
+#=> [------c-o--o--o--o--o--o--o--]  23%
 #+end_src
 
-#+RESULTS:
-: [------c-o--o--o--o--o--o--o--]  23%
+Running this function multiple times will overwrite the last result.
+
+#+begin_src elixir
+PacmanProgressBar.render(30, 7)
+PacmanProgressBar.render(30, 12)
+
+#=> [-----------C--o--o--o--o--o--]  40%
+#+end_src
 
 You can also get this progress bar in the form of a string, in case that's something you would need.
 
 #+begin_src elixir
 PacmanProgressBar.raw(30, 7)
+
+#=> "[------c-o--o--o--o--o--o--o--]  23%"
 #+end_src
 
-#+RESULTS:
-: "[------c-o--o--o--o--o--o--o--]  23%"
+When the progress bar is complete it will automatically print a newline character.
 
 ** Installation
 
