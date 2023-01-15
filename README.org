@@ -50,8 +50,6 @@ def deps do
 end
 #+end_src
 
-Documentation can be generated with [[https://github.com/elixir-lang/ex_doc][ExDoc]] and published on [[https://hexdocs.pm][HexDocs]]. Once published, the docs can be found at <https://hexdocs.pm/pacman_progress_bar>.
-
 ** License
 
 Released under the [[https://www.gnu.org/licenses/lgpl-3.0.html][LGPL]]. This means that your code can freely use this library. It can even be used in proprietary code. The copyleft license only applies to this library itself. See the LGPL page for more information.

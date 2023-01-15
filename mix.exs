@@ -1,9 +1,12 @@
 defmodule PacmanProgressBar.MixProject do
   use Mix.Project
 
+  @source_url "https://gitlab.com/Pistrie/pacman_progress_bar"
+
   def project do
     [
       app: :pacman_progress_bar,
+      source_url: @source_url,
       version: "0.1.0",
       elixir: "~> 1.14",
       start_permanent: Mix.env() == :prod,
@@ -15,6 +18,16 @@ defmodule PacmanProgressBar.MixProject do
   def application do
     [
       extra_applications: [:logger]
+    ]
+  end
+
+  def package do
+    [
+      description:
+        "Command-line progress bar in the style of Arch Linux's pacman package manager.",
+      maintainers: ["Sylvester Roos"],
+      licenses: ["LGPL-3.0-or-later"],
+      links: %{"GitLab" => @source_url}
     ]
   end
 
