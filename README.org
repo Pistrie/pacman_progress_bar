@@ -40,7 +40,7 @@ When the progress bar is complete it will automatically print a newline characte
 
 ** Installation
 
-If [[https://hex.pm/docs/publish][available in Hex]], the package can be installed by adding ~pacman_progress_bar~ to your list of dependencies in ~mix.exs~:
+The package can be installed by adding ~pacman_progress_bar~ to your list of dependencies in ~mix.exs~:
 
 #+begin_src elixir
 def deps do
