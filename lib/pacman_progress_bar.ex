@@ -134,7 +134,12 @@ defmodule PacmanProgressBar do
     bar = List.replace_at(bar, current_index, pacman_character)
     bar = List.replace_at(bar, current_index - 1, @progress_character)
 
-    pacman_character = alternate_pacman_character(pacman_character)
+    pacman_character =
+      if rem(current_index, 2) == 0 do
+        alternate_pacman_character(pacman_character)
+      else
+        pacman_character
+      end
 
     move_pacman_to_index(
       bar,
