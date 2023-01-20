@@ -7,10 +7,6 @@ defmodule PacmanProgressBar do
   @progress_character "-"
   @meal_character "o"
   @meal_spacing 2
-  # to make a nice bar the length has to be equal to (2 + (n * 3))
-  # change n to get the new length value
-  @bar_size 29
-  # TODO create length based on width of terminal
 
   @spec render(number, number) :: nil | :ok
   @doc """
@@ -54,9 +50,10 @@ defmodule PacmanProgressBar do
       #=> "[------c-o--o--o--o--o--o--o--]  23%"
   """
   def raw(total_tasks, completed_tasks) do
-    bar = initial_bar()
+    bar_size = determine_terminal_width() |> determine_bar_size()
+    bar = initial_bar(bar_size)
     percentage_completed = percentage_completed(total_tasks, completed_tasks)
-    destination_index = percentage_to_index(percentage_completed)
+    destination_index = percentage_to_index(bar_size, percentage_completed)
 
     bar = move_pacman_to_index(bar, destination_index, 0, @initial_pacman_character)
     "#{bar |> add_borders_to_bar()} #{percentage_completed |> format_percentage()}"
@@ -74,29 +71,30 @@ defmodule PacmanProgressBar do
 
   defp percentage_completed(total_tasks, completed_tasks) do
     (completed_tasks / total_tasks)
-    |> Float.floor(2)
+    |> Float.round(2)
     |> Kernel.*(100)
     |> trunc()
   end
 
   # initial_bar creates a progress bar where a meal is placed every x characters
   # where x is @meal_spacing
-  defp initial_bar(bar \\ "", counter \\ 0, mealcounter \\ 0)
+  defp initial_bar(bar_size, bar \\ "", counter \\ 0, mealcounter \\ 0)
 
-  defp initial_bar(bar, counter, _) when counter == @bar_size, do: bar |> String.to_charlist()
+  defp initial_bar(bar_size, bar, counter, _) when counter == bar_size,
+    do: bar |> String.to_charlist()
 
-  defp initial_bar(bar, counter, mealcounter) when mealcounter == @meal_spacing do
+  defp initial_bar(bar_size, bar, counter, mealcounter) when mealcounter == @meal_spacing do
     bar = bar <> @meal_character
-    initial_bar(bar, counter + 1)
+    initial_bar(bar_size, bar, counter + 1)
   end
 
-  defp initial_bar(bar, counter, mealcounter) when counter < @bar_size do
+  defp initial_bar(bar_size, bar, counter, mealcounter) when counter < bar_size do
     bar = bar <> @progress_character
-    initial_bar(bar, counter + 1, mealcounter + 1)
+    initial_bar(bar_size, bar, counter + 1, mealcounter + 1)
   end
 
-  defp percentage_to_index(percentage_completed),
-    do: (percentage_completed / 100 * @bar_size) |> Float.floor() |> trunc()
+  defp percentage_to_index(bar_size, percentage_completed),
+    do: (percentage_completed / 100 * bar_size) |> Float.round() |> trunc()
 
   defp move_pacman_to_index(
          bar,
@@ -151,5 +149,27 @@ defmodule PacmanProgressBar do
       "c" -> "C"
       "C" -> "c"
     end
+  end
+
+  @fallback_width 80
+  defp determine_terminal_width do
+    case :io.columns() do
+      {:ok, count} -> count
+      _ -> @fallback_width
+    end
+  end
+
+  defp determine_bar_size(terminal_width) do
+    # (2 + (n * 3))
+    # (2 + (32 * 3)) = 98, the maximum
+    Enum.reduce_while(32..1, 0, fn n, bar_size ->
+      possible_bar_size = 2 + n * 3
+
+      if terminal_width - 7 >= possible_bar_size do
+        {:halt, bar_size + possible_bar_size}
+      else
+        {:cont, bar_size}
+      end
+    end)
   end
 end
