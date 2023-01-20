@@ -6,6 +6,7 @@ I got my inspiration from [[https://dennisbeatty.com/cool-clis-in-elixir-with-io
 
 * Table of contents :toc:
   - [[#usage][Usage]]
+  - [[#examples][Examples]]
   - [[#installation][Installation]]
   - [[#license][License]]
 
@@ -37,6 +38,14 @@ PacmanProgressBar.raw(30, 7)
 #+end_src
 
 When the progress bar is complete it will automatically print a newline character.
+
+** Examples
+
+You can try the example script by cloning this repo and running the example script:
+
+#+begin_src
+mix run examples/pacman.exs
+#+end_src
 
 ** Installation
 
