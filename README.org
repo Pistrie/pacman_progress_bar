@@ -56,9 +56,9 @@ A correct value can be calculated by changing ~n~ in ~2 + (n * 3)~.
 You can make pacman yellow by supplying the ~:use_color~ option:
 
 #+begin_src elixir
-PacmanProgressBar.raw(30, 7, use_color: true)
+PacmanProgressBar.raw(30, 7, bar_size: 65, use_color: true)
 
-#=> "[-----------------------\e[33mc\e[0m  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
+#=> "[---------------\e[33mc\e[0m o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
 #+end_src
 
 The ANSI codes will be read by IO.write to turn the ~c~ yellow.
