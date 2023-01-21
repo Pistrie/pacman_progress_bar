@@ -163,6 +163,10 @@ defmodule PacmanProgressBar do
     )
   end
 
+  defp colorize_pacman_character(pacman_character) do
+    IO.ANSI.yellow() <> pacman_character <> IO.ANSI.reset()
+  end
+
   defp alternate_pacman_character(pacman_character) do
     case pacman_character do
       "c" -> "C"
