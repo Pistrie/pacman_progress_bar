@@ -17,7 +17,7 @@ You can render the progress bar using PacmanProgressBar.render/2. You specify th
 #+begin_src elixir
 PacmanProgressBar.render(30, 7)
 
-#=> [-----------------------c  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%
+#=> [-----------------------c  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%
 #+end_src
 
 Running this function multiple times will overwrite the last result.
@@ -26,7 +26,7 @@ Running this function multiple times will overwrite the last result.
 PacmanProgressBar.render(30, 7)
 PacmanProgressBar.render(30, 12)
 
-#=> [---------------------------------------c o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  40%
+#=> [---------------------------------------c o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  40%
 #+end_src
 
 You can also get this progress bar in the form of a string, in case that's something you would need.
@@ -34,7 +34,7 @@ You can also get this progress bar in the form of a string, in case that's somet
 #+begin_src elixir
 PacmanProgressBar.raw(30, 7)
 
-#=> "[-----------------------c  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
+#=> "[-----------------------c  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
 #+end_src
 
 When the progress bar is complete it will automatically print a newline character.
@@ -56,7 +56,7 @@ You can make pacman yellow by supplying the `:use_color` option:
 #+begin_src elixir
 PacmanProgressBar.raw(30, 7, use_color: true)
 
-#=> "[-----------------------\e[33mc\e[0m  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
+#=> "[-----------------------\e[33mc\e[0m  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
 #+end_src
 
 The ANSI codes will be read by IO.write to turn the `c` yellow.
