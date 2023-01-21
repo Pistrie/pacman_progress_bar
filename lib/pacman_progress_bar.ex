@@ -15,20 +15,20 @@ defmodule PacmanProgressBar do
 
   Use PacmanProgressBar.raw/2 to get the progress bar in the form of a string
 
+  ## Options
+
+  - `:use_color` (boolean) - set to true if you want the pacman character to be yellow
+  - `:bar_size` (integer) - the amount of characters between the square brackets. A correct value can be calculated by changing `n` in `2 + (n * 3)`
+
   ## Examples
 
       iex> PacmanProgressBar.render(30, 7)
-      #=> [------c-o--o--o--o--o--o--o--]  23%
+      #=> [------c o  o  o  o  o  o  o  ]  23%
 
-      iex> defmodule Test do
-             def function do
-               PacmanProgressBar.render(30, 7)
-               PacmanProgressBar.render(30, 10)
-             end
-           end
-      #=> [---------C-o--o--o--o--o--o--]  33%
+      iex> PacmanProgressBar.render(30, 7)
+           PacmanProgressBar.render(30, 10)
+      #=> [---------C o  o  o  o  o  o  ]  33%
   """
-  # TODO add colours to make it more like the real pacman bar
   def render(total_tasks, completed_tasks, opts \\ [])
 
   def render(total_tasks, completed_tasks, opts) do
@@ -45,10 +45,15 @@ defmodule PacmanProgressBar do
 
   Use PacmanProgressBar.render/2 if you automatically want to write this string to the terminal
 
+  ## Options
+
+  - `:use_color` (boolean) - set to true if you want the pacman character to be yellow
+  - `:bar_size` (integer) - the amount of characters between the square brackets. A correct value can be calculated by changing `n` in `2 + (n * 3)`
+
   ## Examples
 
       iex> PacmanProgressBar.raw(30, 7)
-      #=> "[------c-o--o--o--o--o--o--o--]  23%"
+      #=> "[------c o  o  o  o  o  o  o  ]  23%"
   """
   def raw(total_tasks, completed_tasks, opts \\ [])
 
@@ -57,6 +62,7 @@ defmodule PacmanProgressBar do
 
   def raw(total_tasks, completed_tasks, opts) do
     bar_size = Keyword.get(opts, :bar_size)
+    use_color? = Keyword.get(opts, :use_color)
 
     bar_size =
       if bar_size == nil or not is_number(bar_size) do
@@ -69,7 +75,7 @@ defmodule PacmanProgressBar do
     percentage_completed = percentage_completed(total_tasks, completed_tasks)
     destination_index = percentage_to_index(bar_size, percentage_completed)
 
-    bar = move_pacman_to_index(bar, destination_index, 0, @initial_pacman_character)
+    bar = move_pacman_to_index(bar, destination_index, 0, @initial_pacman_character, use_color?)
     "#{bar |> add_borders_to_bar()} #{percentage_completed |> format_percentage()}"
   end
 
@@ -114,7 +120,8 @@ defmodule PacmanProgressBar do
          bar,
          destination_index,
          current_index,
-         _
+         _pacman_character,
+         _use_color?
        )
        when current_index > destination_index,
        do: bar
@@ -123,10 +130,16 @@ defmodule PacmanProgressBar do
          bar,
          destination_index,
          current_index,
-         pacman_character
+         pacman_character,
+         use_color?
        )
        when current_index == 0 do
-    bar = List.replace_at(bar, 0, pacman_character)
+    bar =
+      if use_color? == true do
+        List.replace_at(bar, 0, pacman_character |> colorize_pacman_character)
+      else
+        List.replace_at(bar, 0, pacman_character)
+      end
 
     pacman_character = alternate_pacman_character(pacman_character)
 
@@ -134,7 +147,8 @@ defmodule PacmanProgressBar do
       bar,
       destination_index,
       current_index + 1,
-      pacman_character
+      pacman_character,
+      use_color?
     )
   end
 
@@ -142,11 +156,18 @@ defmodule PacmanProgressBar do
          bar,
          destination_index,
          current_index,
-         pacman_character
+         pacman_character,
+         use_color?
        )
        when current_index <= destination_index do
-    bar = List.replace_at(bar, current_index, pacman_character)
-    bar = List.replace_at(bar, current_index - 1, @progress_character)
+    bar =
+      if use_color? == true do
+        bar = List.replace_at(bar, current_index, pacman_character |> colorize_pacman_character())
+        List.replace_at(bar, current_index - 1, @progress_character)
+      else
+        bar = List.replace_at(bar, current_index, pacman_character)
+        List.replace_at(bar, current_index - 1, @progress_character)
+      end
 
     pacman_character =
       if rem(current_index, 2) == 0 do
@@ -159,7 +180,8 @@ defmodule PacmanProgressBar do
       bar,
       destination_index,
       current_index + 1,
-      pacman_character
+      pacman_character,
+      use_color?
     )
   end
 
