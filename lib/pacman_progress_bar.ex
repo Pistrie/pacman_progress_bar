@@ -8,7 +8,7 @@ defmodule PacmanProgressBar do
   @meal_character "o"
   @meal_spacing 2
 
-  @spec render(number, number) :: nil | :ok
+  @spec render(number, number, keyword) :: nil | :ok
   @doc """
   Writes the progress bar to the terminal using IO.write/2. Calling this function again will overwrite the last progress bar. If all tasks are completed it will automatically print a newline character
 
@@ -27,18 +27,18 @@ defmodule PacmanProgressBar do
            end
       #=> [---------C-o--o--o--o--o--o--]  33%
   """
-  def render(total_tasks, completed_tasks) do
-    IO.write("\r#{raw(total_tasks, completed_tasks)}")
+  # TODO add colours to make it more like the real pacman bar
+  def render(total_tasks, completed_tasks, opts \\ [])
+
+  def render(total_tasks, completed_tasks, opts) do
+    IO.write("\r#{raw(total_tasks, completed_tasks, opts)}")
 
     if total_tasks == completed_tasks do
       IO.write("\n")
     end
   end
 
-  @spec raw(number, number) :: nonempty_binary
-  def raw(total_tasks, completed_tasks) when completed_tasks > total_tasks,
-    do: raise("completed_tasks cannot be higher than total_tasks")
-
+  @spec raw(number, number, keyword) :: nonempty_binary
   @doc """
   Returns the progress bar in the form of a string
 
@@ -49,8 +49,21 @@ defmodule PacmanProgressBar do
       iex> PacmanProgressBar.raw(30, 7)
       #=> "[------c-o--o--o--o--o--o--o--]  23%"
   """
-  def raw(total_tasks, completed_tasks) do
-    bar_size = determine_terminal_width() |> determine_bar_size()
+  def raw(total_tasks, completed_tasks, opts \\ [])
+
+  def raw(total_tasks, completed_tasks, _opts) when completed_tasks > total_tasks,
+    do: raise("completed_tasks cannot be higher than total_tasks")
+
+  def raw(total_tasks, completed_tasks, opts) do
+    bar_size = Keyword.get(opts, :bar_size)
+
+    bar_size =
+      if bar_size == nil or not is_number(bar_size) do
+        determine_terminal_width() |> determine_bar_size()
+      else
+        bar_size
+      end
+
     bar = initial_bar(bar_size)
     percentage_completed = percentage_completed(total_tasks, completed_tasks)
     destination_index = percentage_to_index(bar_size, percentage_completed)
