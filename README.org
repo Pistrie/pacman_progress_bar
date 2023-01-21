@@ -12,12 +12,12 @@ I got my inspiration from [[https://dennisbeatty.com/cool-clis-in-elixir-with-io
 
 ** Usage
 
-You can render the progress bar using PacmanProgressBar.render/2. You specify the total amount of tasks being executed and the amount of tasks completed. This uses IO.write/2 to print the bar, and the bar is preceded by a carriage return character to replace the previous bar like so: IO.write("\r[---C-o..."
+You can render the progress bar using PacmanProgressBar.render/2. You specify the total amount of tasks being executed and the amount of tasks completed. This uses IO.write/2 to print the bar, and the bar is preceded by a carriage return character to replace the previous bar like so: IO.write("\r[---C o..."
 
 #+begin_src elixir
 PacmanProgressBar.render(30, 7)
 
-#=> [------c-o--o--o--o--o--o--o--]  23%
+#=> [-----------------------c  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%
 #+end_src
 
 Running this function multiple times will overwrite the last result.
@@ -26,7 +26,7 @@ Running this function multiple times will overwrite the last result.
 PacmanProgressBar.render(30, 7)
 PacmanProgressBar.render(30, 12)
 
-#=> [-----------C--o--o--o--o--o--]  40%
+#=> [---------------------------------------c o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  40%
 #+end_src
 
 You can also get this progress bar in the form of a string, in case that's something you would need.
@@ -34,10 +34,32 @@ You can also get this progress bar in the form of a string, in case that's somet
 #+begin_src elixir
 PacmanProgressBar.raw(30, 7)
 
-#=> "[------c-o--o--o--o--o--o--o--]  23%"
+#=> "[-----------------------c  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
 #+end_src
 
 When the progress bar is complete it will automatically print a newline character.
+
+*** Bar size
+
+You can change the size of the bar by supplying the `:bar_size` option:
+
+#+begin_src elixir
+PacmanProgressBar.render(30, 7, bar_size: 47)
+
+#=> [-----------c  o  o  o  o  o  o  o  o  o  o  o  ]  23%
+#+end_src
+
+*** Pacman color
+
+You can make pacman yellow by supplying the `:use_color` option:
+
+#+begin_src elixir
+PacmanProgressBar.raw(30, 7, use_color: true)
+
+#=> "[-----------------------\e[33mc\e[0m  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  o  ]  23%"
+#+end_src
+
+The ANSI codes will be read by IO.write to turn the `c` yellow.
 
 ** Examples
 
@@ -45,6 +67,8 @@ You can try the example script by cloning this repo and running the example scri
 
 #+begin_src
 mix run examples/pacman.exs
+
+mix run examples/pacman_no_color.exs
 #+end_src
 
 ** Installation
