@@ -4,6 +4,7 @@ defmodule PacmanProgressBar do
   """
 
   @initial_pacman_character "c"
+  @spacing_character " "
   @progress_character "-"
   @meal_character "o"
   @meal_spacing 2
@@ -102,7 +103,7 @@ defmodule PacmanProgressBar do
   end
 
   defp initial_bar(bar_size, bar, counter, mealcounter) when counter < bar_size do
-    bar = bar <> @progress_character
+    bar = bar <> @spacing_character
     initial_bar(bar_size, bar, counter + 1, mealcounter + 1)
   end
 
